@@ -2,7 +2,7 @@ import { Request,Response,NextFunction } from "express";
 import { verify } from "jsonwebtoken";
 import { createError } from "./errorHandler";
 
-function auth(req:Request,res:Response,next:NextFunction){
+export function auth(req:Request,res:Response,next:NextFunction){
     let bearerToken = req.headers.authorization
     if(!bearerToken){
         return next(createError(401,"Belum login"))
