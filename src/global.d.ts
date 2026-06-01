@@ -32,6 +32,7 @@ declare global {
     interface ReqParams{
         id:number
     }
+
 }
 
 export = {}
