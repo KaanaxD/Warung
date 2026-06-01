@@ -45,7 +45,7 @@ export async function postItem(req: Request<{}, {}, ReqBody>, res: Response<ResB
         const data = await insertItem(validate.nama,validate.kategori)
         res.status(201).json({
             success: true,
-            message: `berhasil mengambil item dengan nama ${req.body.nama} dan kategori ${req.body.kategori} `,
+            message: `berhasil mengambil item dengan nama ${validate.nama} dan kategori ${validate.kategori} `,
             data: data
         })
     } catch (error) {
@@ -54,10 +54,11 @@ export async function postItem(req: Request<{}, {}, ReqBody>, res: Response<ResB
 }
 export async function putItem(req: Request<ReqParams, {}, ReqBody>, res: Response<ResBody>, next: NextFunction) {
     try {
-        const data = await updateItem(req.params.id, req.body.nama, req.body.kategori)
+        let validate = await itemSchema.parseAsync(req.body)
+        const data = await updateItem(req.params.id,validate.nama,validate.kategori)
         res.json({
             success: true,
-            message: `berhasil mengupdate id = ${req.params.id} dengan nama ${req.body.nama} dan kategori ${req.body.kategori} `,
+            message: `berhasil mengupdate id = ${req.params.id} dengan nama ${validate.nama} dan kategori ${validate.kategori} `,
             data: data
         })
     } catch (error) {
@@ -67,7 +68,7 @@ export async function putItem(req: Request<ReqParams, {}, ReqBody>, res: Respons
 export async function deleteItem(req: Request<ReqParams>, res: Response<ResBody>, next: NextFunction) {
     try {
         const data = await removeItem(req.params.id)
-        res.json({
+            res.json({
             success: true,
             message: `berhasil menghapus item dengan id = ${req.params.id} `,
             data: data
