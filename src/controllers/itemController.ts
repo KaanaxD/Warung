@@ -1,6 +1,8 @@
 import { Request, Response, NextFunction } from "express";
 import itemService from "../services/itemServices";
 import { z } from "zod"
+import { webpConvert } from "../utils/imgConvert";
+import { createError } from "../middlewares/errorHandler";
 
 interface PaginationQueryParams {
     page: number
@@ -42,8 +44,13 @@ export default function itemController() {
         },
         postItem: async (req: Request<{}, {}, ReqBody>, res: Response<ResBody>, next: NextFunction) => {
             try {
-                let validate = await itemSchema.parseAsync(req.body)
-                const data = await (await itemService()).insertItem(validate.nama, validate.kategori, req.file?.filename)
+                let imgName: string | undefined = undefined;
+                const validate = await itemSchema.parseAsync(req.body)
+                if (req.file?.filename) {
+                    imgName = await webpConvert(req.file?.path as string)
+                }
+                const data = await (await itemService()).insertItem(validate.nama, validate.kategori, imgName)
+
                 res.status(201).json({
                     success: true,
                     message: `berhasil mengambil item dengan nama ${validate.nama} dan kategori ${validate.kategori} `,
@@ -55,9 +62,14 @@ export default function itemController() {
         },
         putItem: async (req: Request, res: Response<ResBody>, next: NextFunction) => {
             try {
+                let imgName: string | undefined = undefined;
+
                 let validate = await itemSchema.parseAsync(req.body);
+                if (req.file?.filename) {
+                    imgName = await webpConvert(req.file?.path as string)
+                }
                 (await itemService()).removeOldImage(Number(req.params.id))
-                const data = await (await itemService()).updateItem(Number(req.params.id), validate.nama, validate.kategori,req.file?.filename as string)
+                const data = await (await itemService()).updateItem(Number(req.params.id), validate.nama, validate.kategori, imgName)
                 res.json({
                     success: true,
                     message: `berhasil mengupdate id = ${req.params.id} dengan nama ${validate.nama} dan kategori ${validate.kategori} `,
@@ -82,8 +94,13 @@ export default function itemController() {
         },
         uploadItemImg: async (req: Request, res: Response<ResBody>, next: NextFunction) => {
             try {
+                let imgName: string ;
+                if (!req.file?.filename) {
+                    throw createError(400,"tidak ada img yang diupload")
+                }
+                imgName = await webpConvert(req.file?.path as string) as string;
                 (await itemService()).removeOldImage(Number(req.params.id))
-                const data = await (await itemService()).addImgAddress(Number(req.params.id), req.file?.filename as string)
+                const data = await (await itemService()).addImgAddress(Number(req.params.id), imgName )
                 res.json({
                     success: true,
                     message: `berhasil mengupload gambar item id = ${req.params.id} dengan nama file ${req.file?.filename}`,

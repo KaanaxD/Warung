@@ -58,6 +58,6 @@ export default async function itemService() {
             const imgPath = path.join(__dirname, "..","..", "uploads", exist[0].img_address)
             console.log(imgPath)
             fs.removeSync(imgPath)
-        }
+        },
     }
 }
