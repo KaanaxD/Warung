@@ -1,3 +1,5 @@
+import { JwtPayload } from "jsonwebtoken";
+
 declare global {
     interface LoginBody {
         username: string;
@@ -31,7 +33,18 @@ declare global {
 
     interface ReqParams{
         id:number
+    }   
+
+    interface AdminPayload extends JwtPayload{
+        username: string
     }
+
+    namespace Express{
+        interface Request{
+            admin?: AdminPayload
+        }
+    }
+
 
 }
 

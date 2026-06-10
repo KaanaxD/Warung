@@ -12,7 +12,7 @@ app.use(express.urlencoded())
 app.use(express.json())
 
 app.use('/api/auth',authRouter)
-app.use('/api/item',auth,itemRouter)
+app.use('/api/item'/*,auth,*/,itemRouter)
 
 app.use(errorHandler)
 

@@ -1,14 +1,14 @@
 import express from "express";
 import itemController from "../controllers/itemController";
-export let itemRouter = express.Router()
-import { upload } from "../middlewares/upload";
+import { upload } from "../config/upload";
 
+export const itemRouter = express.Router()
 itemRouter.get("/",itemController().getAll)
 itemRouter.get("/:id",itemController().getItem)
 
-itemRouter.post("/",itemController().postItem)
+itemRouter.post("/",upload.single("image"),itemController().postItem)
 
-itemRouter.put("/:id",itemController().putItem)
+itemRouter.put("/:id",upload.single("image"),itemController().putItem)
 itemRouter.delete("/:id",itemController().deleteItem)
 
-itemRouter.post("/:id/upload",upload.single("image"),itemController().uploadItemImg )
+itemRouter.patch("/:id/upload",upload.single("image"),itemController().uploadItemImg )
