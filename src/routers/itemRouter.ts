@@ -1,13 +1,14 @@
 import express from "express";
-import * as ctr from "../controllers/itemController";
+import itemController from "../controllers/itemController";
 export let itemRouter = express.Router()
+import { upload } from "../middlewares/upload";
 
-itemRouter.get("/",ctr.getAll)
-itemRouter.get("/:id",ctr.getItem)
+itemRouter.get("/",itemController().getAll)
+itemRouter.get("/:id",itemController().getItem)
 
-itemRouter.post("/",ctr.postItem)
+itemRouter.post("/",itemController().postItem)
 
-itemRouter.put("/:id",ctr.putItem)
-itemRouter.delete("/:id",ctr.deleteItem)
+itemRouter.put("/:id",itemController().putItem)
+itemRouter.delete("/:id",itemController().deleteItem)
 
-// itemRouter.put("/:id/upload")
+itemRouter.post("/:id/upload",upload.single("image"),itemController().uploadItemImg )
