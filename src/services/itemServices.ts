@@ -1,5 +1,7 @@
+import path from "node:path";
 import { createError } from "../middlewares/errorHandler";
 import itemModel from "../models/itemModel";
+import fs from "fs-extra"
 
 export default async function itemService() {
     return {
@@ -16,16 +18,16 @@ export default async function itemService() {
             return data[0]
         },
 
-        insertItem: async (nama: string, kategori: string,img:string|null = null) => {
-            const data = await itemModel().postItemQuery(nama, kategori,img)
+        insertItem: async (nama: string, kategori: string, img: string | null = null) => {
+            const data = await itemModel().postItemQuery(nama, kategori, img)
             return data[0]
         },
 
-        updateItem: async (id: number, nama?: string, kategori?: string) => {
+        updateItem: async (id: number, nama?: string, kategori?: string, img?: string) => {
             if (!nama && !kategori) {
                 throw createError(400, "tidak ada data yang diubah")
             }
-            const data = await itemModel().putItemQuery(id, nama, kategori)
+            const data = await itemModel().putItemQuery(id, nama, img, kategori)
             if (data.length === 0) {
                 throw createError(404, "item tidak ditemukan")
             }
@@ -47,5 +49,15 @@ export default async function itemService() {
             }
             return data[0]
         },
+        removeOldImage: async (id: number) => {
+            const exist = await itemModel().getItemQuery(id)
+            if (!exist[0]?.img_address) {
+                console.log("MASUK")
+                return
+            }
+            const imgPath = path.join(__dirname, "..","..", "uploads", exist[0].img_address)
+            console.log(imgPath)
+            fs.removeSync(imgPath)
+        }
     }
 }

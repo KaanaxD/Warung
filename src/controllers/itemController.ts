@@ -43,7 +43,7 @@ export default function itemController() {
         postItem: async (req: Request<{}, {}, ReqBody>, res: Response<ResBody>, next: NextFunction) => {
             try {
                 let validate = await itemSchema.parseAsync(req.body)
-                const data = await (await itemService()).insertItem(validate.nama, validate.kategori,req.file?.filename)
+                const data = await (await itemService()).insertItem(validate.nama, validate.kategori, req.file?.filename)
                 res.status(201).json({
                     success: true,
                     message: `berhasil mengambil item dengan nama ${validate.nama} dan kategori ${validate.kategori} `,
@@ -55,8 +55,9 @@ export default function itemController() {
         },
         putItem: async (req: Request, res: Response<ResBody>, next: NextFunction) => {
             try {
-                let validate = await itemSchema.parseAsync(req.body)
-                const data = await (await itemService()).updateItem(Number(req.params.id), validate.nama, validate.kategori)
+                let validate = await itemSchema.parseAsync(req.body);
+                (await itemService()).removeOldImage(Number(req.params.id))
+                const data = await (await itemService()).updateItem(Number(req.params.id), validate.nama, validate.kategori,req.file?.filename as string)
                 res.json({
                     success: true,
                     message: `berhasil mengupdate id = ${req.params.id} dengan nama ${validate.nama} dan kategori ${validate.kategori} `,
@@ -68,6 +69,7 @@ export default function itemController() {
         },
         deleteItem: async (req: Request<ReqParams>, res: Response<ResBody>, next: NextFunction) => {
             try {
+                (await itemService()).removeOldImage(req.params.id)
                 const data = await (await itemService()).removeItem(req.params.id)
                 res.json({
                     success: true,
@@ -78,9 +80,10 @@ export default function itemController() {
                 next(error)
             }
         },
-        uploadItemImg: async (req: Request,res: Response<ResBody>, next: NextFunction) => {
+        uploadItemImg: async (req: Request, res: Response<ResBody>, next: NextFunction) => {
             try {
-                const data = await (await itemService()).addImgAddress(Number(req.params.id),req.file?.filename as string)
+                (await itemService()).removeOldImage(Number(req.params.id))
+                const data = await (await itemService()).addImgAddress(Number(req.params.id), req.file?.filename as string)
                 res.json({
                     success: true,
                     message: `berhasil mengupload gambar item id = ${req.params.id} dengan nama file ${req.file?.filename}`,
@@ -89,6 +92,6 @@ export default function itemController() {
             } catch (error) {
                 next(error)
             }
-        }   
+        }
     }
 }

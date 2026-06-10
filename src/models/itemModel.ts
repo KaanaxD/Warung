@@ -29,11 +29,12 @@ export default function itemModel() {
         putItemQuery: async (
             id: number,
             nama: string | undefined = undefined,
+            img: string | undefined = undefined,
             kategori: string | undefined = undefined
         ): Promise<Item[]> => {
             const item = await pool.query<Item>(
-                `UPDATE item SET nama = COALESCE($1,nama), kategori = COALESCE($2,kategori), updated_at = NOW() WHERE id = $3 RETURNING *, TO_CHAR(updated_at, 'DD-MM-YYYY HH24:MI:SS') AS updated_at;`,
-                [nama, kategori, id]
+                `UPDATE item SET nama = COALESCE($1,nama), kategori = COALESCE($2,kategori), img_address = COALESCE($3,img_address), updated_at = NOW() WHERE id = $4 RETURNING *, TO_CHAR(updated_at, 'DD-MM-YYYY HH24:MI:SS') AS updated_at;`,
+                [nama, kategori, img,id]
             )
             return item.rows
         },
