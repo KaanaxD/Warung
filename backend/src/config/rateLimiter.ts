@@ -4,7 +4,7 @@ export default function rateLimiter(){
     return{
         generalRateLimiter: rateLimit({
             windowMs:60000 * 15,
-            limit: 50,
+            limit: 1000,
             legacyHeaders: false,
             standardHeaders: true,
             message:{

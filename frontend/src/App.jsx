@@ -19,6 +19,7 @@ export default function App() {
   const [token, updateToken] = useState(getToken());
   const [login, setLogin] = useState({ username: "", password: "" });
   const [form, setForm] = useState(initialForm);
+  const [imagePreview, setImagePreview] = useState("");
 
   const selectedItem = useMemo(() => {
     return adminItems.find((item) => String(item.id) === String(form.id)) || items.find((item) => String(item.id) === String(form.id));
@@ -71,6 +72,18 @@ export default function App() {
   useEffect(() => {
     loadAdminItems();
   }, [adminPage, adminLimit, token]);
+
+  useEffect(() => {
+    if (!form.image) {
+      setImagePreview("");
+      return undefined;
+    }
+
+    const previewUrl = URL.createObjectURL(form.image);
+    setImagePreview(previewUrl);
+
+    return () => URL.revokeObjectURL(previewUrl);
+  }, [form.image]);
 
   async function handleLogin(event) {
     event.preventDefault();
@@ -194,6 +207,7 @@ export default function App() {
             token={token}
             login={login}
             form={form}
+            imagePreview={imagePreview}
             items={adminItems}
             page={adminPage}
             totalPages={adminTotalPages}
@@ -220,6 +234,7 @@ export default function App() {
           <EditItemView
             form={form}
             item={selectedItem}
+            imagePreview={imagePreview}
             status={adminStatus}
             onFormChange={setForm}
             onSave={saveItem}
@@ -291,6 +306,7 @@ function AdminView({
   token,
   login,
   form,
+  imagePreview,
   items,
   page,
   totalPages,
@@ -352,7 +368,10 @@ function AdminView({
         </label>
         <label className="file-field">
           <span>Gambar</span>
-          <input onChange={(event) => onFormChange({ ...form, image: event.target.files[0] || null })} type="file" accept="image/*" />
+          <div className={imagePreview ? "upload-box has-preview" : "upload-box"}>
+            <input type="file" accept="image/*" />
+            {imagePreview && <img src={imagePreview} alt="Preview gambar baru" />}
+          </div>
         </label>
         <div className="form-actions">
           <button className="primary" type="submit">Simpan</button>
@@ -395,7 +414,7 @@ function AdminView({
   );
 }
 
-function EditItemView({ form, item, status, onFormChange, onSave, onCancel }) {
+function EditItemView({ form, item, imagePreview, status, onFormChange, onSave, onCancel }) {
   if (!form.id) {
     return (
       <section className="admin-view">
@@ -423,8 +442,15 @@ function EditItemView({ form, item, status, onFormChange, onSave, onCancel }) {
       <div className="edit-layout">
         <aside className="panel detail-panel">
           <div className="detail-preview">
-            {item?.img_address ? <img src={imageUrl(item.img_address)} alt={item.nama} /> : <span>{form.nama.slice(0, 2).toUpperCase()}</span>}
+            {imagePreview ? (
+              <img src={imagePreview} alt="Preview gambar baru" />
+            ) : item?.img_address ? (
+              <img src={imageUrl(item.img_address)} alt={item.nama} />
+            ) : (
+              <span>{form.nama.slice(0, 2).toUpperCase()}</span>
+            )}
           </div>
+          {imagePreview && <p className="preview-note">Preview gambar baru</p>}
           <dl className="detail-list">
             <div>
               <dt>ID</dt>
