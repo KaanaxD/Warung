@@ -15,7 +15,7 @@ const port = process.env.PORT
 app.use(express.urlencoded())
 app.use(express.json())
 
-app.use('/api',generalRateLimiter)
+// app.use('/api',generalRateLimiter)
 app.use('/api/auth',auhtRateLimiter)
 
 app.use('/api/img',express.static(path.join(__dirname,"..","uploads")))

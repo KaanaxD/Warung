@@ -52,11 +52,9 @@ export default async function itemService() {
         removeOldImage: async (id: number) => {
             const exist = await itemModel().getItemQuery(id)
             if (!exist[0]?.img_address) {
-                console.log("MASUK")
                 return
             }
             const imgPath = path.join(__dirname, "..","..", "uploads", exist[0].img_address)
-            console.log(imgPath)
             fs.removeSync(imgPath)
         },
     }

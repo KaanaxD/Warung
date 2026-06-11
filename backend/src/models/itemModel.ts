@@ -34,16 +34,18 @@ export default function itemModel() {
         ): Promise<Item[]> => {
             const item = await pool.query<Item>(
                 `UPDATE item SET nama = COALESCE($1,nama), kategori = COALESCE($2,kategori), img_address = COALESCE($3,img_address), updated_at = NOW() WHERE id = $4 RETURNING *, TO_CHAR(updated_at, 'DD-MM-YYYY HH24:MI:SS') AS updated_at;`,
-                [nama, kategori, img,id]
+                [nama, kategori, img, id]
             )
             return item.rows
         },
         deleteItemQuery: async (id: number): Promise<Item[]> => {
             const item = await pool.query<Item>(`DELETE FROM item WHERE id = $1 RETURNING *, TO_CHAR(updated_at, 'DD-MM-YYYY HH24:MI:SS') AS updated_at`, [id])
+            console.log(item.rows)
             return item.rows
         },
         itemUpload: async (id: number, img: string): Promise<Item[]> => {
             const item = await pool.query<Item>('UPDATE item SET img_address=$1 WHERE id=$2 RETURNING *', [img, id])
+            console.log(item.rows)
             return item.rows
         }
     }
