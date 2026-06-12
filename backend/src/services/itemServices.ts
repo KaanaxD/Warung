@@ -2,7 +2,6 @@ import path from "node:path";
 import { createError } from "../middlewares/errorHandler";
 import itemModel from "../models/itemModel";
 import fs from "fs-extra"
-import { success } from "zod";
 
 export default async function itemService() {
     return {
@@ -11,16 +10,14 @@ export default async function itemService() {
             return data
         },
         search: async (
-            nama: string | undefined = undefined,
-            kategori: string | undefined = undefined,
+            keyword: string | undefined = undefined,
             page: number = 1,
             limit: number = 10
         ) => {
-            const data = await itemModel().searchItemQuery(nama,kategori,page,limit)
+            const data = await itemModel().searchItemQuery(keyword,page,limit)
             if(data.items.length ==0){
                 return {
                     success: true,
-                    status: 404,
                     message: "tidak ada data yang cocok"
                 }
             }
