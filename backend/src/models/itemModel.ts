@@ -49,14 +49,13 @@ export default function itemModel() {
             return item.rows
         },
         searchItemQuery: async (
-            nama: string | undefined = undefined,
-            kategori: string | undefined = undefined,
+            keyword: string = "",
             page: number = 1,
             limit: number = 10
         ): Promise<ItemPagination> => {
             const offset = (page - 1) * limit
-            const item = await pool.query(`SELECT * FROM item WHERE nama ILIKE $1 OR kategori ILIKE $2 LIMIT $3 OFFSET $4`, [`%${nama}%`, `%${kategori}%`, limit, offset])
-            const total = await pool.query(`SELECT COUNT(*) FROM item WHERE nama ILIKE $1 OR kategori ILIKE $2`, [`%${nama}%`, `%${kategori}%`])
+            const item = await pool.query(`SELECT *,TO_CHAR(updated_at, 'DD-MM-YYYY HH24:MI:SS') FROM item WHERE nama ILIKE $1 OR kategori ILIKE $1 LIMIT $2 OFFSET $3`, [`%${keyword}%`, limit, offset])
+            const total = await pool.query(`SELECT COUNT(*) FROM item WHERE nama ILIKE $1 OR kategori ILIKE $1`, [`%${keyword}%`])
             const totalPages = Math.ceil(parseInt(total.rows[0].count) / limit)
             return {
                 items: item.rows,

@@ -4,6 +4,7 @@ import { upload } from "../config/upload";
 
 export const itemRouter = express.Router()
 itemRouter.get("/",itemController().getAll)
+itemRouter.get("/search",itemController().searchItem)
 itemRouter.get("/:id",itemController().getItem)
 
 itemRouter.post("/",upload.single("image"),itemController().postItem)

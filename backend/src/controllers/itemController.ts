@@ -42,13 +42,12 @@ export default function itemController() {
                 next(error)
             }
         },
-        searchItem: async (req: Request<{}, {}, {}, PaginationQueryParams & { nama: string, kategori: string }>, res: Response<ResBody>, next: NextFunction) => {
+        searchItem: async (req: Request<{}, {}, {}, PaginationQueryParams & { keyword:string }>, res: Response<ResBody>, next: NextFunction) => {
             try {
-                console.log("masuk1")
-                let data = await (await itemService()).search(req.query.nama, req.query.kategori, req.query.page, req.query.limit)
+                let data = await (await itemService()).search(req.query.keyword, req.query.page, req.query.limit)
                 res.json({
                     success: true,
-                    message: `Searching item: ${req.query.nama}` || `Searching kategori; ${req.query.kategori} `,
+                    message: `Searching: ${req.query.keyword} `,
                     data: data
                 })
             } catch (error) {
