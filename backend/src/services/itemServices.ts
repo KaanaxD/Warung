@@ -2,6 +2,7 @@ import path from "node:path";
 import { createError } from "../middlewares/errorHandler";
 import itemModel from "../models/itemModel";
 import fs from "fs-extra"
+import { success } from "zod";
 
 export default async function itemService() {
     return {
@@ -9,7 +10,22 @@ export default async function itemService() {
             const data = await itemModel().getAllQuery(page, limit)
             return data
         },
-
+        search: async (
+            nama: string | undefined = undefined,
+            kategori: string | undefined = undefined,
+            page: number = 1,
+            limit: number = 10
+        ) => {
+            const data = await itemModel().searchItemQuery(nama,kategori,page,limit)
+            if(data.items.length ==0){
+                return {
+                    success: true,
+                    status: 404,
+                    message: "tidak ada data yang cocok"
+                }
+            }
+            return data
+        },
         findItemById: async (id: number) => {
             const data = await itemModel().getItemQuery(id)
             if (data.length === 0) {
@@ -43,7 +59,7 @@ export default async function itemService() {
         },
 
         addImgAddress: async (id: number, img: string) => {
-            const data = await itemModel().itemUpload(id, img)
+            const data = await itemModel().itemUploadQuery(id, img)
             if (data.length === 0) {
                 throw createError(404, "item tidak ditemukan")
             }
@@ -54,7 +70,7 @@ export default async function itemService() {
             if (!exist[0]?.img_address) {
                 return
             }
-            const imgPath = path.join(__dirname, "..","..", "uploads", exist[0].img_address)
+            const imgPath = path.join(__dirname, "..", "..", "uploads", exist[0].img_address)
             fs.removeSync(imgPath)
         },
     }

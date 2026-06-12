@@ -42,6 +42,19 @@ export default function itemController() {
                 next(error)
             }
         },
+        searchItem: async (req: Request<{}, {}, {}, PaginationQueryParams & { nama: string, kategori: string }>, res: Response<ResBody>, next: NextFunction) => {
+            try {
+                console.log("masuk1")
+                let data = await (await itemService()).search(req.query.nama, req.query.kategori, req.query.page, req.query.limit)
+                res.json({
+                    success: true,
+                    message: `Searching item: ${req.query.nama}` || `Searching kategori; ${req.query.kategori} `,
+                    data: data
+                })
+            } catch (error) {
+                next(error)
+            }
+        },
         postItem: async (req: Request<{}, {}, ReqBody>, res: Response<ResBody>, next: NextFunction) => {
             try {
                 let imgName: string | undefined = undefined;
@@ -94,13 +107,13 @@ export default function itemController() {
         },
         uploadItemImg: async (req: Request, res: Response<ResBody>, next: NextFunction) => {
             try {
-                let imgName: string ;
+                let imgName: string;
                 if (!req.file?.filename) {
-                    throw createError(400,"tidak ada img yang diupload")
+                    throw createError(400, "tidak ada img yang diupload")
                 }
                 imgName = await webpConvert(req.file?.path as string) as string;
                 (await itemService()).removeOldImage(Number(req.params.id))
-                const data = await (await itemService()).addImgAddress(Number(req.params.id), imgName )
+                const data = await (await itemService()).addImgAddress(Number(req.params.id), imgName)
                 res.json({
                     success: true,
                     message: `berhasil mengupload gambar item id = ${req.params.id} dengan nama file ${req.file?.filename}`,

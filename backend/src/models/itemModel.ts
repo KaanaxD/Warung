@@ -43,10 +43,30 @@ export default function itemModel() {
             console.log(item.rows)
             return item.rows
         },
-        itemUpload: async (id: number, img: string): Promise<Item[]> => {
+        itemUploadQuery: async (id: number, img: string): Promise<Item[]> => {
             const item = await pool.query<Item>('UPDATE item SET img_address=$1 WHERE id=$2 RETURNING *', [img, id])
             console.log(item.rows)
             return item.rows
+        },
+        searchItemQuery: async (
+            nama: string | undefined = undefined,
+            kategori: string | undefined = undefined,
+            page: number = 1,
+            limit: number = 10
+        ): Promise<ItemPagination> => {
+            const offset = (page - 1) * limit
+            const item = await pool.query(`SELECT * FROM item WHERE nama ILIKE $1 OR kategori ILIKE $2 LIMIT $3 OFFSET $4`, [`%${nama}%`, `%${kategori}%`, limit, offset])
+            const total = await pool.query(`SELECT COUNT(*) FROM item WHERE nama ILIKE $1 OR kategori ILIKE $2`, [`%${nama}%`, `%${kategori}%`])
+            const totalPages = Math.ceil(parseInt(total.rows[0].count) / limit)
+            return {
+                items: item.rows,
+                pagination: {
+                    page: page,
+                    limit: limit,
+                    totalItem: parseInt(total.rows[0].count),
+                    totalPages: totalPages
+                }
+            }
         }
     }
 }

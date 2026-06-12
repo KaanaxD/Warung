@@ -1,7 +1,8 @@
 import express from "express"
 import itemController from "../controllers/itemController"
 
-export const veiwRouter = express.Router()
+export const viewRouter = express.Router()
 
-veiwRouter.get("/",itemController().getAll)
-veiwRouter.get("/:id",itemController().getItem)
+viewRouter.get("/",itemController().getAll)
+viewRouter.get("/search",itemController().searchItem)
+viewRouter.get("/:id",itemController().getItem)
