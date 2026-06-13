@@ -9,8 +9,8 @@ export function auth(req:Request,res:Response,next:NextFunction){
     }
     let token = bearerToken.split(" ")[1]
     try {
-        let user = verify(token as string,process.env.JWT_SECRET as string)
-        req.admin = user as AdminPayload
+        let user = verify(token as string,process.env.JWT_SECRET as string) as AdminPayload
+        req.admin = user  
     } catch (error) {
         return next(createError(401,"invalid token"))
     }

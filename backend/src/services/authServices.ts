@@ -7,8 +7,8 @@ export function verifyUser(username:string,password:string){
     }
     let token = sign({
         username: process.env.ADMIN_USERNAME,
-    } as AdminPayload, process.env.JWT_SECRET as string, {
-        expiresIn: "1d"
+    } , process.env.JWT_SECRET as string, {
+        expiresIn: "10d"
     })
     return token
 }

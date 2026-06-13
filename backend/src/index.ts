@@ -7,6 +7,7 @@ import { auth } from "./middlewares/auth"
 import path from "node:path"
 import { viewRouter } from "./routers/viewRouter"
 import rateLimiter from "./config/rateLimiter"
+import { logsRouter } from "./routers/logsRouter"
 const {generalRateLimiter,auhtRateLimiter} = rateLimiter()
 
 const app = express()
@@ -22,6 +23,7 @@ app.use('/api/img',express.static(path.join(__dirname,"..","uploads")))
 app.use('/api/auth',authRouter)
 app.use('/api/view/item',viewRouter)
 app.use('/api/admin/item',auth,itemRouter)
+app.use('/api/admin/logs',auth,logsRouter)
 
 app.use(errorHandler)
 
