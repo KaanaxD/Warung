@@ -14,7 +14,7 @@ export default function rateLimiter(){
         }),
         auhtRateLimiter: rateLimit({
             windowMs:60000 * 15,
-            limit: 10,
+            limit: 5,
             legacyHeaders: false,
             standardHeaders: true,
             message:{
