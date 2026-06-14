@@ -17,10 +17,7 @@ export default async function itemService() {
         ) => {
             const data = await itemModel().searchItemQuery(keyword, page, limit)
             if (data.items.length == 0) {
-                return {
-                    success: true,
-                    message: "tidak ada data yang cocok"
-                }
+                throw createError(404, "item tidak ditemukan")
             }
             return data
         },
@@ -49,44 +46,43 @@ export default async function itemService() {
             if (!nama && !kategori) {
                 throw createError(400, "tidak ada data yang diubah")
             }
-            let change="UPDATE";
-            if(nama){
-                change+=" NAMA_ITEM"
+            let change = "UPDATE";
+            if (nama) {
+                change += " NAMA_ITEM"
             }
-            if(kategori){
-                change+=" KATEGORI"
+            if (kategori) {
+                change += " KATEGORI"
             }
-            if(img){
-                change+=" IMG"
+            if (img) {
+                change += " IMG"
             }
             const oldData = await (await itemService()).findItemById(id)
             const data = await itemModel().putItemQuery(id, nama, img, kategori)
-            await logModel().insertLogs(admin, id, change , oldData, data[0])
             if (data.length === 0) {
                 throw createError(404, "item tidak ditemukan")
             }
+            await logModel().insertLogs(admin, id, change, oldData, data[0])
             return data[0]
         },
 
         removeItem: async (admin: string, id: number) => {
             const oldData = await (await itemService()).findItemById(id)
             const data = await itemModel().deleteItemQuery(id)
-            await logModel().insertLogs(admin, id, "DELETE", oldData, null)
-
             if (data.length === 0) {
                 throw createError(404, "item tidak ditemukan")
             }
+            await logModel().insertLogs(admin, id, "DELETE", oldData, null)
+
             return data[0]
         },
 
-        addImgAddress: async (admin:string,id: number, img: string) => {
+        addImgAddress: async (admin: string, id: number, img: string) => {
             const oldData = await (await itemService()).findItemById(id)
             const data = await itemModel().itemUploadQuery(id, img)
-            await logModel().insertLogs(admin, id, "UPDATE IMG", oldData, data[0])
-
             if (data.length === 0) {
                 throw createError(404, "item tidak ditemukan")
             }
+            await logModel().insertLogs(admin, id, "UPDATE IMG", oldData, data[0])
             return data[0]
         },
         removeOldImage: async (id: number) => {

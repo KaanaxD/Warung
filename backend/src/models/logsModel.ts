@@ -2,7 +2,7 @@ import { pool } from "../config/pg"
 
 export default function logModel() {
     return {
-        getAllLogs: async (page: number=1, limit: number=10): Promise<ItemLogPagination|null> => {
+        getAllLogs: async (page: number = 1, limit: number = 10): Promise<ItemLogPagination | null> => {
             const offset = (page - 1) * limit
             const data = await pool.query<ItemLog>(`SELECT * FROM item_log ORDER BY updated_at DESC LIMIT $1 OFFSET $2`, [limit, offset])
             const total = await pool.query(`SELECT COUNT(*) FROM item_log`)
@@ -10,7 +10,7 @@ export default function logModel() {
             return {
                 logs: data.rows,
                 pagination: {
-                    page: page ,
+                    page: page,
                     limit: limit,
                     totalItem: parseInt(total.rows[0].count),
                     totalPages: totalPages
@@ -18,13 +18,15 @@ export default function logModel() {
             }
         },
 
-        getLogsById: async (id: number): Promise<ItemLog[]|null> => {
+        getLogsById: async (id: number): Promise<ItemLog[] | null> => {
             const data = await pool.query<ItemLog>(`SELECT * FROM item_log WHERE id=$1`, [id])
+            if (data.rows.length == 0) return null
             return data.rows
         },
- 
-        getLogsByItemId: async (id: number): Promise<ItemLog[]|null> => {
+
+        getLogsByItemId: async (id: number): Promise<ItemLog[] | null> => {
             const data = await pool.query<ItemLog>(`SELECT * FROM item_log WHERE item_id=$1`, [id])
+            if (data.rows.length == 0) return null
             return data.rows
         },
 

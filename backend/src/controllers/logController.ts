@@ -36,7 +36,7 @@ export default function logController() {
         },
         getLogByItemId: async (req: Request<ReqParams>, res: Response<ResBody>, next: NextFunction) => {
             try {
-                const data = await (await logService()).log(req.params.item_id)
+                const data = await (await logService()).itemLog(req.params.item_id)
                 res.json({
                     success: true,
                     message: `berhasil mengabil log item dengan id item ${req.params.item_id}`,

@@ -33,8 +33,9 @@ declare global {
     }
 
     interface ItemLog {
-        admin: string;
-        item: number;
+        id: number
+        admin_name: string;
+        item_id: number;
         action: string;
         old_data: Item | null;
         new_data: Item | null;

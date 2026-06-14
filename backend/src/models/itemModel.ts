@@ -40,12 +40,10 @@ export default function itemModel() {
         },
         deleteItemQuery: async (id: number): Promise<Item[]> => {
             const item = await pool.query<Item>(`DELETE FROM item WHERE id = $1 RETURNING *, TO_CHAR(updated_at, 'DD-MM-YYYY HH24:MI:SS') AS updated_at`, [id])
-            console.log(item.rows)
             return item.rows
         },
         itemUploadQuery: async (id: number, img: string): Promise<Item[]> => {
             const item = await pool.query<Item>('UPDATE item SET img_address=$1 WHERE id=$2 RETURNING *', [img, id])
-            console.log(item.rows)
             return item.rows
         },
         searchItemQuery: async (
@@ -54,7 +52,7 @@ export default function itemModel() {
             limit: number = 10
         ): Promise<ItemPagination> => {
             const offset = (page - 1) * limit
-            const item = await pool.query(`SELECT *,TO_CHAR(updated_at, 'DD-MM-YYYY HH24:MI:SS') FROM item WHERE nama ILIKE $1 OR kategori ILIKE $1 LIMIT $2 OFFSET $3`, [`%${keyword}%`, limit, offset])
+            const item = await pool.query(`SELECT *,TO_CHAR(updated_at, 'DD-MM-YYYY HH24:MI:SS') AS updated_at FROM item WHERE nama ILIKE $1 OR kategori ILIKE $1 LIMIT $2 OFFSET $3`, [`%${keyword}%`, limit, offset])
             const total = await pool.query(`SELECT COUNT(*) FROM item WHERE nama ILIKE $1 OR kategori ILIKE $1`, [`%${keyword}%`])
             const totalPages = Math.ceil(parseInt(total.rows[0].count) / limit)
             return {

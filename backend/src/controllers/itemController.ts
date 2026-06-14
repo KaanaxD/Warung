@@ -64,7 +64,6 @@ export default function itemController() {
                 const validate = await itemSchema.parseAsync(req.body)
                 if (req.file?.filename) {
                     imgName = await webpConvert(req.file?.path as string)
-                    console.log("masuk")
                 }
                 const data = await (await itemService()).insertItem(req.admin.username ,validate.nama, validate.kategori,imgName)
 
