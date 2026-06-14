@@ -9,7 +9,7 @@ import { viewRouter } from "./routers/viewRouter"
 import rateLimiter from "./config/rateLimiter"
 import { logsRouter } from "./routers/logsRouter"
 import cors from "cors"
-// const {generalRateLimiter,auhtRateLimiter} = rateLimiter()
+const {generalRateLimiter,auhtRateLimiter} = rateLimiter()
 
 const app = express()
 const port = process.env.PORT
@@ -20,8 +20,8 @@ app.use(cors({
 app.use(express.urlencoded())
 app.use(express.json())
 
-// app.use('/api',generalRateLimiter)
-// app.use('/api/auth',auhtRateLimiter)
+app.use('/api',generalRateLimiter)
+app.use('/api/auth',auhtRateLimiter)
 
 app.use('/api/img',express.static(path.join(__dirname,"..","uploads")))
 app.use('/api/auth',authRouter)
