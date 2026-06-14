@@ -16,9 +16,6 @@ export default async function itemService() {
             limit: number = 10
         ) => {
             const data = await itemModel().searchItemQuery(keyword, page, limit)
-            if (data.items.length == 0) {
-                throw createError(404, "item tidak ditemukan")
-            }
             return data
         },
         findItemById: async (id: number) => {

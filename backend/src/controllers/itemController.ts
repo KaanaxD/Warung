@@ -44,10 +44,7 @@ export default function itemController() {
         },
         searchItem: async (req: Request<{}, {}, {}, PaginationQueryParams & { keyword:string }>, res: Response<ResBody>, next: NextFunction) => {
             try {
-                let keyword = req.query.keyword 
-                if(!req.query.keyword){
-                    keyword = ""
-                }
+                let keyword = req.query.keyword ?? ""
                 let data = await (await itemService()).search(keyword, req.query.page, req.query.limit)
                 res.json({
                     success: true,

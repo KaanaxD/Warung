@@ -10,14 +10,14 @@ export default function logService() {
         log: async (id: number) => {
             const data = await (await logModel()).getLogsById(id)
             if(!data){
-                throw createError(404,"item tidak ditemukan")
+                throw createError(404,"log tidak ditemukan")
             }
             return data[0]
         },
         itemLog: async (item_id: number) => {
             const data = await (await logModel()).getLogsByItemId(item_id)
             if(!data){
-                throw createError(404,"item tidak ditemukan")
+                throw createError(404,"log tidak ditemukan")
             }
             return data[0]
         }
