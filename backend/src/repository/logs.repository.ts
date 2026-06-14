@@ -1,6 +1,6 @@
 import { pool } from "../config/pg"
 
-export default function logModel() {
+export default function logRepository() {
     return {
         getAllLogs: async (page: number = 1, limit: number = 10): Promise<ItemLogPagination> => {
             const offset = (page - 1) * limit

@@ -1,5 +1,5 @@
 import express from "express"
-import logController from "../controllers/logController"
+import logController from "../controllers/log.controller"
 export let logsRouter = express.Router()
 
 logsRouter.get("/",logController().getAllLog)

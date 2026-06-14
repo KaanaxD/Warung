@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import itemService from "../services/itemServices";
+import itemService from "../services/item.service";
 import { z } from "zod"
 import { webpConvert } from "../utils/imgConvert";
 import { createError } from "../middlewares/errorHandler";

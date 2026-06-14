@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import logService from "../services/logsService";
+import logService from "../services/logs.service";
 
 interface PaginationQueryParams {
     page: number

@@ -1,5 +1,5 @@
 import { Request,Response,NextFunction } from "express";
-import { verifyUser } from "../services/authServices";
+import { verifyUser } from "../services/auth.service";
 
 export function login(req:Request<{},{},LoginBody>,res:Response<ResBody>,next:NextFunction){
     try {

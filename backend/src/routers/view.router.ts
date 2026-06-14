@@ -1,5 +1,5 @@
 import express from "express"
-import itemController from "../controllers/itemController"
+import itemController from "../controllers/item.controller"
 
 export const viewRouter = express.Router()
 

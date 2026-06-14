@@ -1,5 +1,5 @@
 import express from "express";
-import itemController from "../controllers/itemController";
+import itemController from "../controllers/item.controller";
 import { upload } from "../config/upload";
 
 export const itemRouter = express.Router()

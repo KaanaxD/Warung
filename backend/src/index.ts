@@ -1,13 +1,13 @@
 import "dotenv/config"
 import express from 'express'
-import { authRouter } from "./routers/authRouter"
+import { authRouter } from "./routers/auth.router"
 import { errorHandler } from "./middlewares/errorHandler"
-import { itemRouter } from "./routers/itemRouter"
+import { itemRouter } from "./routers/item.router"
 import { auth } from "./middlewares/auth"
 import path from "node:path"
-import { viewRouter } from "./routers/viewRouter"
+import { viewRouter } from "./routers/view.router"
 import rateLimiter from "./config/rateLimiter"
-import { logsRouter } from "./routers/logsRouter"
+import { logsRouter } from "./routers/logs.router"
 import cors from "cors"
 const {generalRateLimiter,auhtRateLimiter} = rateLimiter()
 
