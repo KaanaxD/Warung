@@ -1,6 +1,6 @@
 import { pool } from "../config/pg";
 
-export default function itemRepository() {
+export default function itemModel() {
     return {
         getAllQuery: async (page: number = 1, limit: number = 10): Promise<ItemPagination> => {
             const offset = (page - 1) * limit

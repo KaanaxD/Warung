@@ -1,13 +1,13 @@
 import path from "node:path";
 import { createError } from "../middlewares/errorHandler";
-import itemRepository from "../repository/item.repository";
+import itemModel from "../repository/item.repository";
 import fs from "fs-extra"
 import logRepository from "../repository/logs.repository";
 
 export default async function itemService() {
     return {
         getAllItem: async (page: number = 1, limit: number = 10) => {
-            const data = await itemRepository().getAllQuery(page, limit)
+            const data = await itemModel().getAllQuery(page, limit)
             return data
         },
         search: async (
@@ -15,11 +15,11 @@ export default async function itemService() {
             page: number = 1,
             limit: number = 10
         ) => {
-            const data = await itemRepository().searchItemQuery(keyword, page, limit)
+            const data = await itemModel().searchItemQuery(keyword, page, limit)
             return data
         },
         findItemById: async (id: number) => {
-            const data = await itemRepository().getItemQuery(id)
+            const data = await itemModel().getItemQuery(id)
             if (data.length === 0) {
                 throw createError(404, "item tidak ditemukan")
             }
@@ -27,7 +27,7 @@ export default async function itemService() {
         },
 
         insertItem: async (admin: string, nama: string, kategori: string, img: string | null = null) => {
-            const data = await itemRepository().postItemQuery(nama, kategori, img)
+            const data = await itemModel().postItemQuery(nama, kategori, img)
             if (!data) {
                 throw createError(500, "gagal menambah item")
             }
@@ -54,7 +54,7 @@ export default async function itemService() {
                 change += " IMG"
             }
             const oldData = await (await itemService()).findItemById(id)
-            const data = await itemRepository().putItemQuery(id, nama, img, kategori)
+            const data = await itemModel().putItemQuery(id, nama, img, kategori)
             if (data.length === 0) {
                 throw createError(404, "item tidak ditemukan")
             }
@@ -64,7 +64,7 @@ export default async function itemService() {
 
         removeItem: async (admin: string, id: number) => {
             const oldData = await (await itemService()).findItemById(id)
-            const data = await itemRepository().deleteItemQuery(id)
+            const data = await itemModel().deleteItemQuery(id)
             if (data.length === 0) {
                 throw createError(404, "item tidak ditemukan")
             }
@@ -75,7 +75,7 @@ export default async function itemService() {
 
         addImgAddress: async (admin: string, id: number, img: string) => {
             const oldData = await (await itemService()).findItemById(id)
-            const data = await itemRepository().itemUploadQuery(id, img)
+            const data = await itemModel().itemUploadQuery(id, img)
             if (data.length === 0) {
                 throw createError(404, "item tidak ditemukan")
             }
@@ -83,7 +83,7 @@ export default async function itemService() {
             return data[0]
         },
         removeOldImage: async (id: number) => {
-            const exist = await itemRepository().getItemQuery(id)
+            const exist = await itemModel().getItemQuery(id)
             if (!exist[0]?.img_address) {
                 return
             }
