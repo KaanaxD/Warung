@@ -1,4 +1,5 @@
 import { JwtPayload } from "jsonwebtoken";
+import { number } from "zod";
 
 declare global {
     interface LoginBody {
@@ -32,6 +33,13 @@ declare global {
         }
     }
 
+    interface Pagination {
+        page: number,
+        limit: number,
+        totalItem: number,
+        totalPages: number
+    }
+
     interface ItemLog {
         id: number
         admin_name: string;
@@ -53,12 +61,12 @@ declare global {
     }
 
     interface ReqParams {
-        item_id:number
+        item_id: number
         id: number
     }
 
-    
-    interface AdminPayload{
+
+    interface AdminPayload {
         username: string;
     }
 
