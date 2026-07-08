@@ -1,16 +1,17 @@
 import { useState } from "react"
 import { useParams, Link } from "react-router-dom"
-import { publicItemApi } from "@/api/item"
-import type { Item } from "@/types"
+import { getPublicProductById } from "@/services/publicService"
+import { ProductImage } from "@/components/products/ProductImage"
+import type { Product } from "@/types/product"
 
 export default function ItemDetail() {
   const { id } = useParams()
-  const [item, setItem] = useState<Item | null>(null)
+  const [item, setItem] = useState<Product | null>(null)
   const [loading, setLoading] = useState(true)
 
   useState(() => {
     if (id) {
-      publicItemApi.getItem(Number(id)).then((res) => {
+      getPublicProductById(Number(id)).then((res) => {
         setItem(res.data.data ?? null)
         setLoading(false)
       })
@@ -25,13 +26,11 @@ export default function ItemDetail() {
       <Link to="/" className="text-sm text-neutral-600 hover:underline">
         &larr; Kembali
       </Link>
-      {item.img_address && (
-        <img
-          src={`/api/img/${item.img_address}`}
-          alt={item.nama}
-          className="mt-4 mb-4 w-full rounded-lg object-cover"
-        />
-      )}
+      <ProductImage
+        src={item.img_address ? `/api/img/${item.img_address}` : null}
+        alt={item.nama}
+        className="mt-4 mb-4 h-80 w-full rounded-lg"
+      />
       <h1 className="text-3xl font-bold">{item.nama}</h1>
       <p className="mt-2 text-neutral-600">{item.kategori}</p>
       <p className="mt-4 text-sm text-neutral-400">

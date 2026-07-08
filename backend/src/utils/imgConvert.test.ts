@@ -1,4 +1,4 @@
-import { describe, it, vi, expect } from "vitest"
+import { describe, it, vi, expect, type Mock } from "vitest"
 import { webpConvert } from "./imgConvert"
 
 vi.mock("sharp", () => ({
