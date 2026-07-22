@@ -146,7 +146,7 @@ describe("itemService", () => {
             const result = await (await itemService()).updateItem("admin", 1, "new", "dog", undefined, 5000)
 
             expect(mockGetItemQuery).toHaveBeenCalledWith(1)
-            expect(mockPutItemQuery).toHaveBeenCalledWith(1, "new", undefined, "dog", 5000)
+            expect(mockPutItemQuery).toHaveBeenCalledWith(1, "new", null, "dog", 5000)
             expect(mockInsertLogs).toHaveBeenCalledWith("admin", 1, "UPDATE NAMA_ITEM KATEGORI PRICE", oldItem, updatedItem)
             expect(result).toEqual(updatedItem)
         })

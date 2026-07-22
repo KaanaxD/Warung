@@ -12,9 +12,17 @@ interface PaginationQueryParams {
 let itemSchema = z.object({
     nama: z.string().min(3, "nama minimal 3 karakter"),
     kategori: z.string().min(3, "kategori minimal 3 karakter"),
-    price: z.number("harga berupa angka").positive("harga tidak boleh negatif").refine((val)=> val % 500 === 0,{
+    price: z.coerce.number("harga berupa angka").positive("harga tidak boleh negatif").refine((val)=> val % 500 === 0,{
         message: "harga harus kelipatan 500",
     })
+})
+
+let nullableItemSchema = z.object({
+    nama: z.string().min(3, "nama minimal 3 karakter").nullable().optional(),
+    kategori: z.string().min(3, "kategori minimal 3 karakter").nullable().optional(),
+    price: z.coerce.number("harga berupa angka").positive("harga tidak boleh negatif").refine((val)=> val % 500 === 0,{
+        message: "harga harus kelipatan 500",
+    }).nullable().optional()
 })
 
 type ReqBody = z.infer<typeof itemSchema>
@@ -80,11 +88,11 @@ export default function itemController() {
             try {
                 let imgName: string | undefined = undefined;
 
-                let validate = await itemSchema.parseAsync(req.body);
+                let validate = await nullableItemSchema.parseAsync(req.body);
                 if (req.file?.filename) {
-                    imgName = await webpConvert(req.file?.path as string)
+                    imgName = await webpConvert(req.file?.path as string);
+                    (await itemService()).removeOldImage(Number(req.params.id))
                 }
-                (await itemService()).removeOldImage(Number(req.params.id))
                 const data = await (await itemService()).updateItem(req.admin.username ,Number(req.params.id), validate.nama, validate.kategori, imgName,validate.price)
                 res.json({
                     success: true,

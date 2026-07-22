@@ -39,8 +39,8 @@ export default async function itemService() {
             return data[0]
         },
 
-        updateItem: async (admin: string, id: number, nama?: string, kategori?: string, img?: string,price?:number) => {
-            if (!nama && !kategori) {
+        updateItem: async (admin: string, id: number, nama: string|null = null, kategori: string|null = null, img: string|null = null,price:number|null = null) => {
+            if (!nama && !kategori && !price && !img) {
                 throw createError(400, "tidak ada data yang diubah")
             }
             let change = "UPDATE";
