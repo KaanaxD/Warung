@@ -26,8 +26,8 @@ export default async function itemService() {
             return data[0]
         },
 
-        insertItem: async (admin: string, nama: string, kategori: string, img: string | null = null) => {
-            const data = await itemRepository().postItemQuery(nama, kategori, img)
+        insertItem: async (admin: string, nama: string, kategori: string, img: string | null = null, price: number) => {
+            const data = await itemRepository().postItemQuery(nama, kategori, img,price)
             if (!data) {
                 throw createError(500, "gagal menambah item")
             }
@@ -39,7 +39,7 @@ export default async function itemService() {
             return data[0]
         },
 
-        updateItem: async (admin: string, id: number, nama?: string, kategori?: string, img?: string) => {
+        updateItem: async (admin: string, id: number, nama?: string, kategori?: string, img?: string,price?:number) => {
             if (!nama && !kategori) {
                 throw createError(400, "tidak ada data yang diubah")
             }
@@ -54,7 +54,7 @@ export default async function itemService() {
                 change += " IMG"
             }
             const oldData = await (await itemService()).findItemById(id)
-            const data = await itemRepository().putItemQuery(id, nama, img, kategori)
+            const data = await itemRepository().putItemQuery(id, nama, img, kategori,price)
             if (data.length === 0) {
                 throw createError(404, "item tidak ditemukan")
             }

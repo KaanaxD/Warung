@@ -31,7 +31,7 @@ export default function itemRepository() {
             nama: string | undefined = undefined,
             img: string | undefined = undefined,
             kategori: string | undefined = undefined,
-            price : string | undefined = undefined
+            price : number | undefined = undefined
         ): Promise<Item[]> => {
             const item = await pool.query<Item>(
                 `UPDATE item SET nama = COALESCE($1,nama), kategori = COALESCE($2,kategori), img_address = COALESCE($3,img_address), updated_at = NOW(), price = COALESCE($4,price) WHERE id = $5 RETURNING *, TO_CHAR(updated_at, 'DD-MM-YYYY HH24:MI:SS') AS updated_at;`,

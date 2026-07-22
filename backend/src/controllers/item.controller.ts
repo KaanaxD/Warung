@@ -11,7 +11,10 @@ interface PaginationQueryParams {
 
 let itemSchema = z.object({
     nama: z.string().min(3, "nama minimal 3 karakter"),
-    kategori: z.string().min(3, "kategori minimal 3 karakter")
+    kategori: z.string().min(3, "kategori minimal 3 karakter"),
+    price: z.number("harga berupa angka").positive("harga tidak boleh negatif").refine((val)=> val % 500 === 0,{
+        message: "harga harus kelipatan 500",
+    })
 })
 
 type ReqBody = z.infer<typeof itemSchema>
@@ -62,7 +65,7 @@ export default function itemController() {
                 if (req.file?.filename) {
                     imgName = await webpConvert(req.file?.path as string)
                 }
-                const data = await (await itemService()).insertItem(req.admin.username ,validate.nama, validate.kategori,imgName)
+                const data = await (await itemService()).insertItem(req.admin.username ,validate.nama, validate.kategori,imgName,validate.price)
 
                 res.status(201).json({
                     success: true,
@@ -82,7 +85,7 @@ export default function itemController() {
                     imgName = await webpConvert(req.file?.path as string)
                 }
                 (await itemService()).removeOldImage(Number(req.params.id))
-                const data = await (await itemService()).updateItem(req.admin.username ,Number(req.params.id), validate.nama, validate.kategori, imgName)
+                const data = await (await itemService()).updateItem(req.admin.username ,Number(req.params.id), validate.nama, validate.kategori, imgName,validate.price)
                 res.json({
                     success: true,
                     message: `berhasil mengupdate id = ${req.params.id} dengan nama ${validate.nama} dan kategori ${validate.kategori} `,
