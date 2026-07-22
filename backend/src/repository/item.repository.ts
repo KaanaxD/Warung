@@ -22,19 +22,20 @@ export default function itemRepository() {
             const item = await pool.query(`SELECT *, TO_CHAR(updated_at, 'DD-MM-YYYY HH24:MI:SS') AS updated_at FROM item WHERE id = $1`, [id])
             return item.rows
         },
-        postItemQuery: async (nama: string, kategori: string, img: string | null): Promise<Item[]> => {
-            const item = await pool.query<Item>(`INSERT INTO item (nama,kategori,img_address) VALUES ($1,$2,$3) RETURNING *, TO_CHAR(updated_at, 'DD-MM-YYYY HH24:MI:SS') AS updated_at`, [nama, kategori, img])
+        postItemQuery: async (nama: string, kategori: string, img: string | null,price:number): Promise<Item[]> => {
+            const item = await pool.query<Item>(`INSERT INTO item (nama,kategori,img_address,price) VALUES ($1,$2,$3,$4) RETURNING *, TO_CHAR(updated_at, 'DD-MM-YYYY HH24:MI:SS') AS updated_at`, [nama, kategori, img,price])
             return item.rows
         },
         putItemQuery: async (
             id: number,
             nama: string | undefined = undefined,
             img: string | undefined = undefined,
-            kategori: string | undefined = undefined
+            kategori: string | undefined = undefined,
+            price : string | undefined = undefined
         ): Promise<Item[]> => {
             const item = await pool.query<Item>(
-                `UPDATE item SET nama = COALESCE($1,nama), kategori = COALESCE($2,kategori), img_address = COALESCE($3,img_address), updated_at = NOW() WHERE id = $4 RETURNING *, TO_CHAR(updated_at, 'DD-MM-YYYY HH24:MI:SS') AS updated_at;`,
-                [nama, kategori, img, id]
+                `UPDATE item SET nama = COALESCE($1,nama), kategori = COALESCE($2,kategori), img_address = COALESCE($3,img_address), updated_at = NOW(), price = COALESCE($4,price) WHERE id = $5 RETURNING *, TO_CHAR(updated_at, 'DD-MM-YYYY HH24:MI:SS') AS updated_at;`,
+                [nama, kategori, img, price ,id]
             )
             return item.rows
         },

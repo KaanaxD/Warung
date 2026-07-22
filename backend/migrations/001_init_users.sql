@@ -2,6 +2,7 @@ CREATE TABLE item(
     id SERIAL PRIMARY KEY,
     nama TEXT NOT NULL,
     kategori TEXT,
+    price NUMERIC NOT NULL,
     updated_at TIMESTAMP DEFAULT NOW(),
     img_address TEXT
 );
@@ -16,3 +17,5 @@ CREATE TABLE item_log(
     updated_at TIMESTAMP DEFAULT NOW()
 );
 
+DROP TABLE item_log;
+DROP TABLE item;
