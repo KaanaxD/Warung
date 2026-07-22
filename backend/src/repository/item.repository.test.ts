@@ -16,12 +16,14 @@ describe("getAllQuery", () => {
                 id: 1,
                 nama: "budi",
                 kategori: "manusia",
+                price: 5000,
                 updated_at: "2026-06-13 21:14:15.992557",
                 img_address: "1231.webp"
             }, {
                 id: 2,
                 nama: "asep",
                 kategori: "manusia",
+                price: 10000,
                 updated_at: "2026-06-13 21:14:15.992557",
                 img_address: "12314.webp"
             }
@@ -56,6 +58,7 @@ describe("getItemQuery", () => {
             id: 0,
             nama: "asep",
             kategori: "manusia",
+            price: 5000,
             updated_at: "2026-06-13 21:14:15.992557",
             img_address: "129338.webp"
         }]
@@ -81,12 +84,13 @@ describe("postItemQuery", () => {
             id: 0,
             nama: "asep",
             kategori: "manusia",
+            price: 5000,
             updated_at: "2026-06-13 21:14:15.992557",
             img_address: "129338.webp"
         }]
             ; (pool.query as Mock).mockResolvedValue({ rows: item })
-        const result = await itemRepository().postItemQuery("ase", "s", "feaef.webp")
-        expect(pool.query).toHaveBeenCalledWith(`INSERT INTO item (nama,kategori,img_address) VALUES ($1,$2,$3) RETURNING *, TO_CHAR(updated_at, 'DD-MM-YYYY HH24:MI:SS') AS updated_at`, ["ase", "s", "feaef.webp"])
+        const result = await itemRepository().postItemQuery("ase", "s", "feaef.webp", 5000)
+        expect(pool.query).toHaveBeenCalledWith(`INSERT INTO item (nama,kategori,img_address,price) VALUES ($1,$2,$3,$4) RETURNING *, TO_CHAR(updated_at, 'DD-MM-YYYY HH24:MI:SS') AS updated_at`, ["ase", "s", "feaef.webp", 5000])
         expect(result).toEqual(item)
 
     })
@@ -100,22 +104,23 @@ describe("putItemQuery", () => {
             id: 0,
             nama: "asep",
             kategori: "manusia",
+            price: 5000,
             updated_at: "2026-06-13 21:14:15.992557",
             img_address: "129338.webp"
         }]
             ; (pool.query as Mock).mockResolvedValue({ rows: item })
-        const result = await itemRepository().putItemQuery(1, "asep", "129338.webp", "manusia")
-        expect(pool.query).toHaveBeenCalledWith(`UPDATE item SET nama = COALESCE($1,nama), kategori = COALESCE($2,kategori), img_address = COALESCE($3,img_address), updated_at = NOW() WHERE id = $4 RETURNING *, TO_CHAR(updated_at, 'DD-MM-YYYY HH24:MI:SS') AS updated_at;`,
-            ["asep", "manusia", "129338.webp", 1])
+        const result = await itemRepository().putItemQuery(1, "asep", "129338.webp", "manusia", 5000)
+        expect(pool.query).toHaveBeenCalledWith(`UPDATE item SET nama = COALESCE($1,nama), kategori = COALESCE($2,kategori), img_address = COALESCE($3,img_address), updated_at = NOW(), price = COALESCE($4,price) WHERE id = $5 RETURNING *, TO_CHAR(updated_at, 'DD-MM-YYYY HH24:MI:SS') AS updated_at;`,
+            ["asep", "manusia", "129338.webp", 5000, 1])
 
         expect(result).toEqual(item)
     })
     it("not found", async () => {
         const item: Item[] = []
             ; (pool.query as Mock).mockResolvedValue({ rows: item })
-        const result = await itemRepository().putItemQuery(1012, "asep", "129338.webp", "manusia")
-        expect(pool.query).toHaveBeenCalledWith(`UPDATE item SET nama = COALESCE($1,nama), kategori = COALESCE($2,kategori), img_address = COALESCE($3,img_address), updated_at = NOW() WHERE id = $4 RETURNING *, TO_CHAR(updated_at, 'DD-MM-YYYY HH24:MI:SS') AS updated_at;`,
-            ["asep", "manusia", "129338.webp", 1012])
+        const result = await itemRepository().putItemQuery(1012, "asep", "129338.webp", "manusia", 5000)
+        expect(pool.query).toHaveBeenCalledWith(`UPDATE item SET nama = COALESCE($1,nama), kategori = COALESCE($2,kategori), img_address = COALESCE($3,img_address), updated_at = NOW(), price = COALESCE($4,price) WHERE id = $5 RETURNING *, TO_CHAR(updated_at, 'DD-MM-YYYY HH24:MI:SS') AS updated_at;`,
+            ["asep", "manusia", "129338.webp", 5000, 1012])
         expect(result).toEqual(item)
     })
 })
@@ -128,6 +133,7 @@ describe("deleteItemQuery", () => {
             id: 0,
             nama: "asep",
             kategori: "manusia",
+            price: 5000,
             updated_at: "2026-06-13 21:14:15.992557",
             img_address: "129338.webp"
         }]
@@ -153,6 +159,7 @@ describe("itemUploadQuery", () => {
             id: 0,
             nama: "asep",
             kategori: "manusia",
+            price: 5000,
             updated_at: "2026-06-13 21:14:15.992557",
             img_address: "129338.webp"
         }]
@@ -180,6 +187,7 @@ describe("searchItemQuery", () => {
                 id: 1,
                 nama: "roefr",
                 kategori: "",
+                price: 5000,
                 updated_at: "",
                 img_address: ""
             }

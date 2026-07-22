@@ -18,6 +18,7 @@ declare global {
         id: number;
         nama: string;
         kategori: string;
+        price: number;
         updated_at: Date | string;
         img_address: string
     }

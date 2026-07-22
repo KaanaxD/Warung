@@ -18,7 +18,7 @@ describe("getAllLogs", () => {
                 item_id: 1,
                 action: "CREATE",
                 old_data: null,
-                new_data: { id: 1, nama: "item1", kategori: "cat1", updated_at: "2026-06-13 21:14:15.992557", img_address: "img1.webp" },
+                new_data: { id: 1, nama: "item1", kategori: "cat1", price: 5000, updated_at: "2026-06-13 21:14:15.992557", img_address: "img1.webp" },
                 updated_at: "2026-06-13 21:14:15.992557"
             }
         ];
@@ -104,12 +104,12 @@ describe("insertLogs", () => {
             item_id: 1,
             action: "CREATE",
             old_data: null,
-            new_data: { id: 1, nama: "item1", kategori: "cat1", updated_at: "2026-06-13 21:14:15.992557", img_address: "img1.webp" },
+                new_data: { id: 1, nama: "item1", kategori: "cat1", price: 5000, updated_at: "2026-06-13 21:14:15.992557", img_address: "img1.webp" },
             updated_at: "13-06-2026 21:14:15"
         }]
         ;(pool.query as Mock).mockResolvedValue({ rows: logs })
         const old_data = null
-        const new_data = { id: 1, nama: "item1", kategori: "cat1", updated_at: "2026-06-13 21:14:15.992557", img_address: "img1.webp" }
+        const new_data = { id: 1, nama: "item1", kategori: "cat1", price: 5000, updated_at: "2026-06-13 21:14:15.992557", img_address: "img1.webp" }
         const result = await logRepository().insertLogs("admin1", 1, "CREATE", old_data, new_data)
         expect(pool.query).toHaveBeenCalledWith(
             `INSERT INTO \n                item_log (admin_name,item_id,action,old_data,new_data,updated_at)\n                VALUES ($1,$2,$3,$4,$5,NOW())\n                RETURNING *,TO_CHAR(updated_at, 'DD-MM-YYYY HH24:MI:SS') AS updated_at`,

@@ -52,6 +52,9 @@ export default async function itemService() {
             }
             if (img) {
                 change += " IMG"
+            } 
+            if (price){
+                change+= " PRICE"
             }
             const oldData = await (await itemService()).findItemById(id)
             const data = await itemRepository().putItemQuery(id, nama, img, kategori,price)
